@@ -1,11 +1,15 @@
-import Alert from "./components/Alert";
+import Button from "./components/Button";
 
 function App() {
+  const handleBtn = (item: string) => {
+    return item === "primary" ? "secondary" : "primary";
+  };
   return (
     <div>
-      <Alert>
-        Hello <b>World</b>
-      </Alert>
+      <Button setOnClick={handleBtn}>Click Me!</Button>
+      <Button setOnClick={handleBtn} color="secondary">
+        Click Me!
+      </Button>
     </div>
   );
 }
