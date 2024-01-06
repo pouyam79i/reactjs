@@ -4,10 +4,11 @@ import { useState } from "react";
 interface Props {
   items: string[];
   heading: string;
+  onSelectItem: (item: string) => void;
 }
 
 // a good way to handle interface or objects as input to the function
-function ListGroup({ items, heading }: Props) {
+function ListGroup({ items, heading, onSelectItem }: Props) {
   // use hook (useState) to tell react components can have dynamic data
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -26,6 +27,7 @@ function ListGroup({ items, heading }: Props) {
             key={item}
             onClick={() => {
               setSelectedIndex(index);
+              onSelectItem(item);
             }}
           >
             {item}
