@@ -2,10 +2,11 @@ import ListGroup from "./components/ListGroup";
 
 // App component
 function App() {
+  let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+
   return (
-    // Note that each component is independent of another one. (repeat <ListGroup /> to see)
     <div>
-      <ListGroup />
+      <ListGroup items={items} heading="Cities" />
     </div>
   );
 }
