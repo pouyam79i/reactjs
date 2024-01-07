@@ -1,23 +1,14 @@
-import Button from "./components/Button";
+import Like from "./components/Like";
 
 function App() {
   return (
     <div>
-      <Button
-        setOnClick={(item) => {
-          console.log("You have clicked the button with text: ", item);
+      <Like
+        comment="Hello"
+        onClick={(item: string) => {
+          console.log("Clicked with: ", item);
         }}
-      >
-        Hello
-      </Button>
-      <Button
-        setOnClick={(item) => {
-          console.log("You have clicked the button with text: ", item);
-        }}
-        color="secondary"
-      >
-        Goodbye
-      </Button>
+      />
     </div>
   );
 }
