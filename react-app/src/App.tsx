@@ -1,11 +1,9 @@
-import ListGroup from "./components/ListGroup";
-import "./App.css";
+import { FaCalendar } from "react-icons/fa";
 
 function App() {
-  const items = ["New York", "San Diego", "California"];
   return (
     <div>
-      <ListGroup items={items} heading="Cities" onSelectItem={() => {}} />
+      <FaCalendar color="red" size="40" />
     </div>
   );
 }
