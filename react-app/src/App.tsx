@@ -1,9 +1,23 @@
-import { FaCalendar } from "react-icons/fa";
+import Button from "./components/Button";
 
 function App() {
   return (
     <div>
-      <FaCalendar color="red" size="40" />
+      <Button
+        setOnClick={(item) => {
+          console.log("You have clicked the button with text: ", item);
+        }}
+      >
+        Hello
+      </Button>
+      <Button
+        setOnClick={(item) => {
+          console.log("You have clicked the button with text: ", item);
+        }}
+        color="secondary"
+      >
+        Goodbye
+      </Button>
     </div>
   );
 }

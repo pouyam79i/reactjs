@@ -1,0 +1,18 @@
+.btn {
+  margin: 10px 10px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  border: none;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: blue;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: gray;
+  color: black;
+}
