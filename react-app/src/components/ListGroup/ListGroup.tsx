@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./ListGroup.module.css";
 
 // using interface to pass parameters
 interface Props {
@@ -16,13 +17,13 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
     <>
       <h1>{heading}</h1>
       {items.length === 0 && <p>No Item Found</p>}
-      <ul className="list-group">
+      <ul className={styles.ListGroup}>
         {items.map((item, index) => (
           <li
             className={
               selectedIndex === index
-                ? "list-group-item active"
-                : "list-group-item"
+                ? [styles.listGroupItem, styles.activate].join(" ")
+                : styles.listGroupItem
             }
             key={item}
             onClick={() => {
