@@ -1,18 +1,35 @@
 import { useState } from "react";
-import NavBar from "./components/NavBar";
-import ListGroup from "./components/ListGroup";
+import Button from "./components/Button";
+import produce from "immer";
 
 function App() {
-  const [list, updateList] = useState(["Item 1", "Item 2", "Item 3"]);
+  const [game, setGame] = useState({
+    id: 1,
+    players: {
+      name: "Pouya",
+    },
+  });
+
+  const handle = () => {
+    // to update objects you can use spread '...' notation to copy all fields before updating any other field
+    // setGame({ ...game, players: { ...game.players, name: "Reza" } });
+
+    // or use immer
+    setGame(
+      produce((draft) => {
+        draft.players.name = "Reza";
+      })
+    );
+  };
+
   return (
     <div>
-      <NavBar itemNumbers={list.length} />
-      <ListGroup
-        items={list}
-        onSelectItem={(key) => {
-          updateList(list.filter((item) => item !== key));
-        }}
-      />
+      {
+        <p>
+          {game.id} - players: {game.players.name}
+        </p>
+      }
+      <Button setOnClick={handle} />
     </div>
   );
 }
