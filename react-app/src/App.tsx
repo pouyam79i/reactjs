@@ -1,45 +1,22 @@
-import { useState } from "react";
-import Button from "./components/Button";
-import produce from "immer";
+import ExpandableText from "./components/ExpandableText";
 
 function App() {
-  const [list, setList] = useState({
-    discount: 0.1,
-    items: [
-      { id: 1, name: "item 1", quantity: 1 },
-      { id: 2, name: "item 2", quantity: 1 },
-    ],
-  });
-
-  const handle = () => {
-    // Normal way:
-    // setList({
-    //   ...list,
-    //   items: list.items.map((item) =>
-    //     item.id === 1 ? { ...item, quantity: item.quantity + 1 } : item
-    //   ),
-    // });
-
-    // Use Immer
-    setList(
-      produce((draft) => {
-        // find the item
-        const item = draft.items.find((item) => item.id === 1);
-        // if found change the wanted field
-        if (item) item.quantity += 1;
-      })
-    );
-  };
-
+  // use lorem100 to generate 100 random words
   return (
     <div>
-      {<p key={-1}>Discount List Items number: {list.items.length}</p>}
-      {list.items.map((item) => (
-        <p key={item.id}>
-          {item.name} - quantity: {item.quantity}
-        </p>
-      ))}
-      <Button setOnClick={handle} />
+      <ExpandableText maxChar={100}>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam
+        temporibus consequatur voluptatem laborum dicta quasi libero eos
+        voluptates quibusdam. Facere explicabo quam nisi eveniet omnis voluptas
+        enim ipsa, autem velit sint, expedita in accusamus a deserunt ad ex
+        ullam. Fugiat nulla perspiciatis facere nobis animi dicta quisquam,
+        saepe ipsa inventore, odio ut eveniet, eaque sit ducimus rem! Eius enim
+        voluptas, non, quo magnam officiis aut voluptate aliquid iusto quibusdam
+        voluptates. Dicta hic placeat recusandae quibusdam dolore iure, optio a
+        quasi, nobis quisquam quam consequatur cupiditate voluptate saepe.
+        Molestiae, soluta. Molestiae quia nobis magni consectetur sit libero
+        nam, harum illum asperiores?
+      </ExpandableText>
     </div>
   );
 }
