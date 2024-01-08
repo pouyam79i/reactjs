@@ -6,35 +6,21 @@ interface props {
 }
 
 const ExpandableText = ({ children = "", maxChar = 100 }: props) => {
-  if (maxChar < 0) maxChar = 0;
-  const [maxShow, setMaxShow] = useState(
-    children.length > maxChar ? maxChar : children.length
-  );
-  const [btnText, setBtnText] = useState(
-    children.length > maxChar ? "More" : "Not Expandable"
-  );
+  const [isExpanded, setExpanded] = useState(false);
+  if (maxChar < 1) maxChar = 1;
+  if (children.length <= maxChar) return <p>{children}</p>;
 
   return (
-    <div>
-      <p>
-        {children.slice(0, maxShow)}
-        {maxShow === maxChar && maxShow < children.length ? "..." : ""}
-      </p>
+    <>
+      <p>{isExpanded ? children : children.substring(0, maxChar) + "..."}</p>
       <button
         onClick={() => {
-          if (btnText === "Not Expandable") return;
-          if (maxShow === maxChar) {
-            setMaxShow(children.length);
-            setBtnText("Less");
-          } else {
-            setMaxShow(maxChar);
-            setBtnText("More");
-          }
+          setExpanded(!isExpanded);
         }}
       >
-        {btnText}
+        {isExpanded ? "Less" : "More"}
       </button>
-    </div>
+    </>
   );
 };
 
