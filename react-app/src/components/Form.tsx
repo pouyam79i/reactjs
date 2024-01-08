@@ -1,10 +1,17 @@
 import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// define form data to make useForm understand form data shape
-interface FormData {
-  name: string;
-  age: number;
-}
+// define schemas with 'zod' for validation rules
+const schema = z.object({
+  name: z.string().min(3).max(3),
+  age: z
+    .number({ invalid_type_error: "Age field is required!" })
+    .min(18, { message: "The person must be at least 18 years old!" })
+    .max(50, { message: "The person must be at most 50 years old!" }),
+});
+
+type FormData = z.infer<typeof schema>;
 
 const Form = () => {
   // deconstructing useForm props
@@ -12,7 +19,7 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   console.log(errors);
   const submitData = (data: FieldValues) => {
@@ -27,28 +34,23 @@ const Form = () => {
             Name
           </label>
           <input
-            {...register("name", {
-              required: true,
-              minLength: 3,
-              maxLength: 50,
-            })}
+            {...register("name")}
             id="name"
             type="text"
             className="form-control"
           />
-          {/* using optional chains '?' in 'errors.name?.type' makes it easier*/}
-          {errors.name?.type === "required" && <p>Name field is required!</p>}
-          {errors.name?.type === "minLength" && <p>Name min length is 3!</p>}
+          {errors.name && <p>{errors.name.message}</p>}
           <div className="mb-3">
             <label htmlFor="age" className="form-label">
               Age
             </label>
             <input
-              {...register("age")}
+              {...register("age", { valueAsNumber: true })}
               id="age"
               type="number"
               className="form-control"
             />
+            {errors.age && <p>{errors.age.message}</p>}
             <button className="btn btn-primary" type="submit">
               Submit
             </button>
