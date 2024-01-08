@@ -1,31 +1,21 @@
-import { FormEvent, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 
 const Form = () => {
-  // using state hook in this case makes it easier but re-rendering with every change might
-  // cause performance issues so in complex pages use the ref hook.
-  const [person, setPerson] = useState({
-    name: "",
-    age: "",
-  });
+  const { register, handleSubmit } = useForm();
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    console.log(person);
+  const submitData = (data: FieldValues) => {
+    console.log(data);
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(submitData)}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
           </label>
           <input
-            //   using controlled values - so it will not get out of sync
-            value={person.name}
-            onChange={(event) => {
-              setPerson({ ...person, name: event.target.value });
-            }}
+            {...register("name")}
             id="name"
             type="text"
             className="form-control"
@@ -35,11 +25,7 @@ const Form = () => {
               Age
             </label>
             <input
-              //   using controlled values - so it will not get out of sync
-              value={person.age}
-              onChange={(event) => {
-                setPerson({ ...person, age: parseInt(event.target.value) });
-              }}
+              {...register("age")}
               id="age"
               type="number"
               className="form-control"
