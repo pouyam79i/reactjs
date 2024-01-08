@@ -3,13 +3,13 @@ import styles from "./Button.module.css";
 interface Props {
   children?: string;
   color?: "primary" | "secondary";
-  setOnClick?: (item: string) => void;
+  setOnClick?: () => void;
 }
 
 const Button = ({
   children = "Click Me!",
   color = "primary",
-  setOnClick = (item) => {
+  setOnClick = () => {
     console.log("Clicked!");
   },
 }: Props) => {
@@ -17,7 +17,7 @@ const Button = ({
     <div
       className={[styles.btn, styles["btn-" + color]].join(" ")}
       onClick={() => {
-        setOnClick(children);
+        setOnClick();
       }}
     >
       {children}

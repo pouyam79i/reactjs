@@ -1,32 +1,28 @@
 import { useState } from "react";
+import Button from "./components/Button";
 
 function App() {
-  // Concepts:
-  // 1- always build your components as pure function: same x in same y out f(x)=y
-  // 2- do not build deeply nested objects cause it is hard to update
-  const [info, setInfo] = useState({
-    name: "Pouya",
-    address: {
-      street: "some street name",
-      postalCode: 54841,
-    },
-  });
+  const [bugs, updateBugs] = useState([
+    { id: 1, comment: "Ths is bug", fixed: false },
+    { id: 2, comment: "Ths is bug", fixed: false },
+  ]);
 
-  // as you can see you have to treat objects as they are immutable
-  // so updating nested ones are harder.
-  setInfo({ ...info, address: { ...info.address, postalCode: 123412 } });
+  const handle = () => {
+    updateBugs(
+      bugs.map((item) => (item.id === 1 ? { ...item, fixed: true } : item))
+    );
+  };
 
-  // working with array:
-  const [array, setArray] = useState(["Ali", "Muhammad"]);
-  // Add
-  setArray([...array, "Joe"]);
-  // Remove
-  setArray(array.filter((item) => item != "Ali"));
-  // update
-  setArray(array.map((item) => (item === "Joe" ? "Reza" : item)));
-
-  // As you can see there is too many re-renders so this is NOT GOOD!
-  return <div></div>;
+  return (
+    <div>
+      {bugs.map((item) => (
+        <p key={item.id}>
+          {item.comment} {item.fixed ? "Fixed" : "New"}
+        </p>
+      ))}
+      <Button setOnClick={handle}>Fix Bug 1</Button>
+    </div>
+  );
 }
 
 // Always export components
