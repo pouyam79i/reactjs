@@ -1,34 +1,30 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 // use this kind of styling if you want to have all css related codes with your main component code (only one .tsx file)
-
-interface ListItemProps {
-  active: boolean;
-}
-
 const List = styled.ul`
   list-style: none;
   padding: 0;
 `;
 
-const ListItem = styled.li<ListItemProps>`
-  padding: 1;
-  background: ${(props) => (props.active ? "blue" : "white")};
+const ListItem = styled.li`
+  padding: 5px;
+  color: white;
+  background-color: black;
 `;
 
 // using interface to pass parameters
 interface Props {
-  items: string[];
-  heading: string;
-  onSelectItem: (item: string) => void;
+  items?: string[];
+  heading?: string;
+  onSelectItem?: (item: string) => void;
 }
 
 // a good way to handle interface or objects as input to the function
-function ListGroup({ items, heading, onSelectItem }: Props) {
-  // use hook (useState) to tell react components can have dynamic data
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
+function ListGroup({
+  items = [],
+  heading = "Items:",
+  onSelectItem = (item: string) => {},
+}: Props) {
   return (
     <>
       <h1>{heading}</h1>
@@ -36,10 +32,8 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
       <List>
         {items.map((item, index) => (
           <ListItem
-            active={index === selectedIndex}
             key={item}
             onClick={() => {
-              setSelectedIndex(index);
               onSelectItem(item);
             }}
           >
