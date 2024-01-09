@@ -1,19 +1,17 @@
 import { useState } from "react";
 
-interface itemData {
-  id: number;
+interface ItemData {
   description: string;
   amount: number;
   category: number;
 }
 
-interface props {
-  items?: itemData[];
+interface Props {
+  items?: ItemData[];
+  onDelete?: (item: ItemData) => void;
 }
 
-const Table = ({ items = [] }: props) => {
-  const [category, setCategory] = useState(0);
-
+const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
   const updateTotal = (category = 0) => {
     let t = 0;
     for (let i = 0; i < items.length; i++) {
@@ -24,7 +22,8 @@ const Table = ({ items = [] }: props) => {
     return t;
   };
 
-  const [total, setTotal] = useState(updateTotal(0));
+  const [category, setCategory] = useState(0);
+  const [total, setTotal] = useState(updateTotal(category));
 
   return (
     <div>
@@ -59,7 +58,7 @@ const Table = ({ items = [] }: props) => {
             {items.map((item) => {
               return (
                 (category === 0 || category === item.category) && (
-                  <tr key={item.id}>
+                  <tr key={item.description}>
                     <td>{item.description}</td>
                     <td>${item.amount}</td>
                     <td>
@@ -67,12 +66,23 @@ const Table = ({ items = [] }: props) => {
                       {item.category === 2 && "Utilities"}
                       {item.category === 3 && "Entertainment"}
                     </td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          onDelete(item);
+                          setTotal(updateTotal(category));
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 )
               );
             })}
 
-            <tr key={-1}>
+            <tr key={"Total"}>
               <td>
                 <b>Total</b>
               </td>

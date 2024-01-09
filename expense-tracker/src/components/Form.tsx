@@ -9,7 +9,7 @@ const schema = z.object({
     .max(10, { message: "At most 10 char for description is required." }),
   amount: z
     .number({ invalid_type_error: "Please specify amount." })
-    .min(1, "At least 1 copy required."),
+    .min(1, "Amount is at least $1"),
   categories: z
     .number({ invalid_type_error: "Please specify category." })
     .min(1, { message: "Please specify category." })
@@ -18,14 +18,31 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const Form = () => {
+interface ItemData {
+  description: string;
+  amount: number;
+  category: number;
+}
+
+interface Props {
+  setOnSubmit?: (item: ItemData) => void;
+}
+
+const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FieldValues) => {};
+  const onSubmit = (data: FieldValues) => {
+    const item = {
+      description: data.description,
+      amount: data.amount,
+      category: data.categories,
+    };
+    setOnSubmit(item);
+  };
 
   return (
     <div>
@@ -75,7 +92,7 @@ const Form = () => {
         </div>
 
         <div className="mb-3">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" disabled={!isValid}>
             Submit
           </button>
         </div>
