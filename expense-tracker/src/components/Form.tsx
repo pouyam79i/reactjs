@@ -64,12 +64,12 @@ const Form = () => {
             {...register("categories", { valueAsNumber: true })}
             id="categories"
             className="form-select"
-            defaultValue={0}
+            defaultValue="0"
           >
-            <option value={0}>Select Category</option>
-            <option value={1}>Groceries</option>
-            <option value={2}>Utilities</option>
-            <option value={3}>Entertainment</option>
+            <option value="0">Select Category</option>
+            <option value="1">Groceries</option>
+            <option value="2">Utilities</option>
+            <option value="3">Entertainment</option>
           </select>
           {errors.categories && <p>{errors.categories.message}</p>}
         </div>
