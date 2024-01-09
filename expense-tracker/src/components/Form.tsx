@@ -10,10 +10,8 @@ const schema = z.object({
   amount: z
     .number({ invalid_type_error: "Please specify amount." })
     .min(1, "Amount is at least $1"),
-  categories: z
-    .number({ invalid_type_error: "Please specify category." })
-    .min(1, { message: "Please specify category." })
-    .max(5, { message: "Please specify category." }),
+  // in real world app cat is cat.id + cat.name -> here I have simplified to just string name :)
+  categories: z.string({ invalid_type_error: "Please specify category." }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -21,7 +19,7 @@ type FormData = z.infer<typeof schema>;
 interface ItemData {
   description: string;
   amount: number;
-  category: number;
+  category: string;
 }
 
 interface Props {
@@ -78,15 +76,15 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
             Category
           </label>
           <select
-            {...register("categories", { valueAsNumber: true })}
+            {...register("categories")}
             id="categories"
             className="form-select"
             defaultValue="0"
           >
             <option value="0">Select Category</option>
-            <option value="1">Groceries</option>
-            <option value="2">Utilities</option>
-            <option value="3">Entertainment</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Entertainment">Entertainment</option>
           </select>
           {errors.categories && <p>{errors.categories.message}</p>}
         </div>

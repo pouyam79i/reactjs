@@ -3,27 +3,15 @@ import { useState } from "react";
 interface ItemData {
   description: string;
   amount: number;
-  category: number;
+  category: string;
 }
-
 interface Props {
   items?: ItemData[];
   onDelete?: (item: ItemData) => void;
 }
 
 const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
-  const updateTotal = (category = 0) => {
-    let t = 0;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].category === category || category === 0) {
-        t = t + items[i].amount;
-      }
-    }
-    return t;
-  };
-
-  const [category, setCategory] = useState(0);
-  const [total, setTotal] = useState(updateTotal(category));
+  const [category, setCategory] = useState("All");
 
   return (
     <div>
@@ -33,14 +21,13 @@ const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
           className="form-select"
           defaultValue="0"
           onChange={(event) => {
-            setCategory(parseInt(event.target.value));
-            setTotal(updateTotal(parseInt(event.target.value)));
+            setCategory(event.target.value);
           }}
         >
-          <option value="0">All Categories</option>
-          <option value="1">Groceries</option>
-          <option value="2">Utilities</option>
-          <option value="3">Entertainment</option>
+          <option value="All">All Categories</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Entertainment">Entertainment</option>
         </select>
       </div>
 
@@ -57,21 +44,16 @@ const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
           <tbody>
             {items.map((item) => {
               return (
-                (category === 0 || category === item.category) && (
+                (category === "All" || category === item.category) && (
                   <tr key={item.description}>
                     <td>{item.description}</td>
                     <td>${item.amount}</td>
-                    <td>
-                      {item.category === 1 && "Groceries"}
-                      {item.category === 2 && "Utilities"}
-                      {item.category === 3 && "Entertainment"}
-                    </td>
+                    <td>{item.category}</td>
                     <td>
                       <button
                         className="btn btn-outline-danger"
                         onClick={() => {
                           onDelete(item);
-                          setTotal(updateTotal(category));
                         }}
                       >
                         Delete
@@ -81,25 +63,22 @@ const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
                 )
               );
             })}
-
-            <tr key={"Total"}>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
               <td>
-                <b>Total</b>
-              </td>
-              <td>
-                <b>${total}</b>
-              </td>
-              <td>
-                <b>
-                  {category === 0 && "All"}
-                  {category === 1 && "Groceries"}
-                  {category === 2 && "Utilities"}
-                  {category === 3 && "Entertainment"}
-                </b>
+                $
+                {items.reduce((acc, item) => {
+                  if (category === "All" || category === item.category)
+                    return item.amount + acc;
+                  else return 0 + acc;
+                }, 0)}
               </td>
               <td></td>
+              <td></td>
             </tr>
-          </tbody>
+          </tfoot>
         </table>
       </div>
     </div>
