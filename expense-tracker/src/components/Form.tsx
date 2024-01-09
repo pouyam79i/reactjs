@@ -1,6 +1,7 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import categories from "../categories";
 
 const schema = z.object({
   description: z
@@ -11,7 +12,7 @@ const schema = z.object({
     .number({ invalid_type_error: "Please specify amount." })
     .min(1, "Amount is at least $1"),
   // in real world app cat is cat.id + cat.name -> here I have simplified to just string name :)
-  categories: z.string({ invalid_type_error: "Please specify category." }),
+  categories: z.enum(categories),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -30,6 +31,7 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -40,6 +42,7 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
       category: data.categories,
     };
     setOnSubmit(item);
+    reset();
   };
 
   return (
@@ -55,7 +58,9 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
             type="text"
             className="form-control"
           />
-          {errors.description && <p>{errors.description.message}</p>}
+          {errors.description && (
+            <p className="text-danger">{errors.description.message}</p>
+          )}
         </div>
 
         <div className="mb-3">
@@ -68,7 +73,9 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
             type="number"
             className="form-control"
           />
-          {errors.amount && <p>{errors.amount.message}</p>}
+          {errors.amount && (
+            <p className="text-danger">{errors.amount.message}</p>
+          )}
         </div>
 
         <div className="mb-3">
@@ -86,7 +93,9 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
             <option value="Utilities">Utilities</option>
             <option value="Entertainment">Entertainment</option>
           </select>
-          {errors.categories && <p>{errors.categories.message}</p>}
+          {errors.categories && (
+            <p className="text-danger">{errors.categories.message}</p>
+          )}
         </div>
 
         <div className="mb-3">
