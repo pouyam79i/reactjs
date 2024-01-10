@@ -1,4 +1,5 @@
 import { useState } from "react";
+import categories from "../categories";
 
 interface ItemData {
   description: string;
@@ -25,9 +26,13 @@ const Table = ({ items = [], onDelete = (item: ItemData) => {} }: Props) => {
           }}
         >
           <option value="All">All Categories</option>
-          <option value="Groceries">Groceries</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Entertainment">Entertainment</option>
+          {categories.map((cat) => {
+            return (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            );
+          })}
         </select>
       </div>
 

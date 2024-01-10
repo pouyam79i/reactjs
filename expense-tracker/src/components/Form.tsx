@@ -89,9 +89,13 @@ const Form = ({ setOnSubmit = (item: ItemData) => {} }: Props) => {
             defaultValue="0"
           >
             <option value="0">Select Category</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Entertainment">Entertainment</option>
+            {categories.map((cat) => {
+              return (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              );
+            })}
           </select>
           {errors.categories && (
             <p className="text-danger">{errors.categories.message}</p>
