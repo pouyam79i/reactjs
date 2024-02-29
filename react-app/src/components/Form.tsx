@@ -1,6 +1,7 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef } from "react";
 
 // define schemas with 'zod' for validation rules
 const schema = z.object({
@@ -25,6 +26,17 @@ const Form = () => {
     console.log(data);
   };
 
+  // additional code:
+  // focus ref for name:
+  const ref = useRef<HTMLInputElement>(null);
+  
+  // after render -> makes the function pure
+  useEffect(()=>{
+    // it has side effect on page contents
+    if (ref.current) ref.current.focus();
+  });
+
+
   return (
     <div>
       <form onSubmit={handleSubmit(submitData)}>
@@ -34,6 +46,7 @@ const Form = () => {
           </label>
           <input
             {...register("name")}
+            // ref={ref}
             id="name"
             type="text"
             className="form-control"
@@ -50,7 +63,9 @@ const Form = () => {
               className="form-control"
             />
             {errors.age && <p>{errors.age.message}</p>}
-            <button
+          </div>
+          <div>
+          <button
               disabled={!isValid}
               className="btn btn-primary"
               type="submit"
