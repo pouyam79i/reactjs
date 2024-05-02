@@ -10,6 +10,7 @@ const UsersList = () => {
 
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<String>("");
+  const [resetToggle, setRestToggle] = useState(-1)
 
   // Update
   const updateUser = (user: User) =>{
@@ -39,8 +40,33 @@ const UsersList = () => {
     })
   }
 
+  // Create
+  const addUser = () => {
+    setError("")
+    const newUser:User = {
+      id: 0,
+      name: "New Member" 
+    } 
+    const originalUsers = users
+    setUsers([newUser, ...users])
+    axios.post("https://jsonplaceholder.typicode.com/users/", newUser)
+    .catch((err: AxiosError) => {
+      setError(err.message)
+      setUsers(originalUsers)
+    })
+  }
+
+  // reset data
+  const toggleRest = () => {
+    if (resetToggle === -1)
+      setRestToggle(1)
+    else
+      setRestToggle(-1)
+  }
+
   // Get all users when loading the page
   useEffect(()=>{
+    setError("")
     const controller = new AbortController();
 
     axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
@@ -53,14 +79,14 @@ const UsersList = () => {
     })
 
     return () => controller.abort()
-  }, [])
+  }, [resetToggle])
 
   // render list
   return <div>
     {(error !== "") && <p className="text-danger">Error: {error}</p>}
     <div className="d-flex justify-content-between">
-      <button type="button" className="btn btn-primary my-1 mx-1">Add User</button>
-      <button type="button" className="btn btn-danger my-1">Reset</button>
+      <button type="button" className="btn btn-primary my-1 mx-1" onClick={()=>{addUser()}}>Add User</button>
+      <button type="button" className="btn btn-danger my-1" onClick={()=>{toggleRest()}}>Reset</button>
     </div>
     <ul className="list-group">
       {users.map(user => {return <li className="list-group-item d-flex justify-content-between" key={user.id}>{user.name}
