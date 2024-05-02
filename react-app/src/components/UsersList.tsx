@@ -8,28 +8,64 @@ interface User {
 
 const UsersList = () => {
 
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState<String>("");
 
+  // Update
+  const updateUser = (user: User) =>{
+    setError("")
+    const updatedUser = {...user, name: user.name+"!"}
+    setUsers(users.map(u => {return (u.id == user.id) ? updatedUser : u}))
+    const originalUsers = users;
+
+    // or user .put() 
+    axios.patch("https://jsonplaceholder.typicode.com/users/" + user.id, updateUser)
+    .catch((err: AxiosError) => {
+      setError(err.message)
+      setUsers(originalUsers)
+    })
+  }
+
+  // Delete
+  const deleteUser = (user: User) =>{
+    setError("")
+    const originalUsers = users
+    setUsers(users.filter(u => u.id !== user.id))
+
+    axios.delete("https://jsonplaceholder.typicode.com/users/" + user.id)
+    .catch((err: AxiosError) => {
+      setError(err.message)
+      setUsers(originalUsers)
+    })
+  }
+
+  // Get all users when loading the page
   useEffect(()=>{
+    const controller = new AbortController();
+
     axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
     .then((res)=>{
       setUsers(res.data)
       console.log(res.data)
     })
     .catch((err: AxiosError)=>{
-      console.log(err.message)
+      setError(err.message)
     })
+
+    return () => controller.abort()
   }, [])
 
+  // render list
   return <div>
+    {(error !== "") && <p className="text-danger">Error: {error}</p>}
     <div className="d-flex justify-content-between">
       <button type="button" className="btn btn-primary my-1 mx-1">Add User</button>
       <button type="button" className="btn btn-danger my-1">Reset</button>
     </div>
     <ul className="list-group">
-      {users.map(user => {return <li className="list-group-item d-flex justify-content-between">{user.name}
-       <div><button type="button" className="btn btn-secondary mx-1">Update</button>
-      <button type="button" className="btn btn-danger">Delete</button></div>
+      {users.map(user => {return <li className="list-group-item d-flex justify-content-between" key={user.id}>{user.name}
+       <div><button type="button" className="btn btn-secondary mx-1" onClick={()=>{updateUser(user)}}>Update</button>
+      <button type="button" className="btn btn-danger" onClick={()=>{deleteUser(user)}}>Delete</button></div>
       </li>
       })}
     </ul>
