@@ -1,13 +1,12 @@
-import Form from "./components/Form";
+import UsersList from "./components/UsersList";
 
 function App() {
-  // use lorem100 to generate 100 random words
+  
   return (
     <div>
-      <Form />
+      <UsersList></UsersList>
     </div>
   );
 }
 
-// Always export components
 export default App;
