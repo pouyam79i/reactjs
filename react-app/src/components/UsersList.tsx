@@ -1,16 +1,10 @@
-import axios, { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
-
-interface User {
-  id: number
-  name: string
-}
+import { useEffect, useState } from "react";
+import userService, { User } from "../services/user-service";
+import useUsers from "../hooks/useUsers";
 
 const UsersList = () => {
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState<String>("");
-  const [resetToggle, setRestToggle] = useState(-1)
+  const {users, error, resetToggle, setUsers, setError, setRestToggle} = useUsers();
 
   // Update
   const updateUser = (user: User) =>{
@@ -19,9 +13,8 @@ const UsersList = () => {
     setUsers(users.map(u => {return (u.id == user.id) ? updatedUser : u}))
     const originalUsers = users;
 
-    // or user .put() 
-    axios.patch("https://jsonplaceholder.typicode.com/users/" + user.id, updateUser)
-    .catch((err: AxiosError) => {
+    userService.update<User>(updatedUser)
+    .catch((err) => {
       setError(err.message)
       setUsers(originalUsers)
     })
@@ -33,8 +26,8 @@ const UsersList = () => {
     const originalUsers = users
     setUsers(users.filter(u => u.id !== user.id))
 
-    axios.delete("https://jsonplaceholder.typicode.com/users/" + user.id)
-    .catch((err: AxiosError) => {
+    userService.delete(user.id)
+    .catch((err) => {
       setError(err.message)
       setUsers(originalUsers)
     })
@@ -49,8 +42,8 @@ const UsersList = () => {
     } 
     const originalUsers = users
     setUsers([newUser, ...users])
-    axios.post("https://jsonplaceholder.typicode.com/users/", newUser)
-    .catch((err: AxiosError) => {
+    userService.add<User>(newUser)
+    .catch((err) => {
       setError(err.message)
       setUsers(originalUsers)
     })
@@ -63,23 +56,6 @@ const UsersList = () => {
     else
       setRestToggle(-1)
   }
-
-  // Get all users when loading the page
-  useEffect(()=>{
-    setError("")
-    const controller = new AbortController();
-
-    axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
-    .then((res)=>{
-      setUsers(res.data)
-      console.log(res.data)
-    })
-    .catch((err: AxiosError)=>{
-      setError(err.message)
-    })
-
-    return () => controller.abort()
-  }, [resetToggle])
 
   // render list
   return <div>
